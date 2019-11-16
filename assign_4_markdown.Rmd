@@ -113,5 +113,23 @@ ggplot(lobster_size) +
 Graph 2 explination put here
 
 
+```{r}
+
+mpa_lobster_size <- lobster_size %>%
+  mutate(mpa_status = case_when(
+    site %in% c('Naples', "Isla Vista") ~ "MPA",
+    site %in% c("Arroyo Quemado", "Carpenteria", "Mohawk") ~ "Non MPA")) 
+
+mpa_mean_size <- mpa_lobster_size %>% 
+  group_by(mpa_status, year) %>% 
+  summarize( mean = mean(size_mm, na.rm = TRUE,) %>% round(2),
+             sd = sd(size_mm, na.rm = TRUE) %>% round(2),
+             sample = n())
+
+
+
+```
+
+
 
 ### Summary
