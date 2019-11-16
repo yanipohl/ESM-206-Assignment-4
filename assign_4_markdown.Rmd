@@ -21,15 +21,28 @@ DO
 
 ```{r, echo=FALSE}
 
+# Attach packages 
+
 library(tidyverse)
 library(dplyr)
 library(janitor)
 library("RColorBrewer")
 
+#read in data, clean names to lowercase snakecase, and uncount the count column
 
 lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv", na = "-99999") %>% 
   clean_names() %>% 
   uncount(count)
+
+      
+```
+
+```{r}
+
+# Results A
+
+
+# Create dataframe for lobster abundance (count) by sample site for each year. Add column to df that indicates MPA status
 
 lobster_yr <- lobster_abundance %>% 
   select(year, site, size_mm) %>% 
@@ -39,6 +52,8 @@ lobster_yr <- lobster_abundance %>%
   mutate(mpa_status = case_when(
     site %in% c('NAPL', "IVEE") ~ "Marine Protected Area",
     site %in% c("AQUE", "CARP", "MOHK") ~ "Unprotected Area"))
+
+# Create line graph to visulize changes in lobster abundance by site from 2012 - 2018
 
 ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
   geom_line(aes(linetype = mpa_status, 
@@ -60,10 +75,6 @@ ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
         plot.title = element_text(hjust = .5),
         plot.caption = element_text(hjust = .5),
         legend.key = element_blank())
-
-        
-  
-
 ```
 
 Graph 1 explination put here. 
@@ -73,6 +84,10 @@ Graph 1 explination put here.
 
 
 ```{r}
+
+# Results B
+
+# Create dataframe of lobster sizes for each site for 2012 and 2018
 
 lobster_size <- lobster_abundance %>% 
   select(year, site, size_mm) %>% 
@@ -88,6 +103,8 @@ lobster_size$site[lobster_size$site == "NAPL"] <- "Naples"
 lobster_size$site[lobster_size$site == "CARP"] <- "Carpenteria"
 
 lobster_size$site[lobster_size$site == "MOHK"] <- "Mohawk"
+
+# Create density plot of lobserter sizes for 2012 and 2018 at each sample site
 
 ggplot(lobster_size) + 
   geom_density(aes(fill = year, x = size_mm, color = year),
@@ -115,10 +132,16 @@ Graph 2 explination put here
 
 ```{r}
 
+# Results C
+
+# Create a new dataframe that adds MPA status column to lobster size dataframe
+
 mpa_lobster_size <- lobster_size %>%
   mutate(mpa_status = case_when(
     site %in% c("Naples", "Isla Vista") ~ "MPA",
     site %in% c("Arroyo Quemado", "Carpenteria", "Mohawk") ~ "Non MPA"))
+
+# Create summary table of mean lobster size, sd and sample size for MPA and Non MPA sites for 2012 and 2018 
 
 mpa_mean_size <- mpa_lobster_size %>% 
   group_by(mpa_status, year) %>% 
