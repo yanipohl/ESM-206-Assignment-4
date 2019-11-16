@@ -1,0 +1,115 @@
+---
+title: "Assignmnet 4"
+author: "Yani Pohl and Marie Bouffard"
+date: "11/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+### Introduction
+
+### Data and Methods
+
+### Results
+
+```{r, echo=FALSE}
+
+library(tidyverse)
+library(dplyr)
+library(janitor)
+library("RColorBrewer")
+
+
+lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv", na = "-99999") %>% 
+  clean_names() %>% 
+  uncount(count)
+
+lobster_yr <- lobster_abundance %>% 
+  select(year, site, size_mm) %>% 
+  group_by(year, site) %>% 
+  count(year, site) %>% 
+  rename(count = n) %>% 
+  mutate(mpa_status = case_when(
+    site %in% c('NAPL', "IVEE") ~ "Marine Protected Area",
+    site %in% c("AQUE", "CARP", "MOHK") ~ "Unprotected Area"))
+
+ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
+  geom_line(aes(linetype = mpa_status, 
+                color = site)) +
+  labs(title = "Santa Barbara Lobster Abundance from 2012 - 2018",
+       x = "Year",
+       y = "Lobster Abundance (individuals)",
+       caption = "Fig. 1 - Lobster populations at five reef site along the Santa Barbara coast between 2012 and 2018.\n  The two study reefs with marine protection stutus show the  largest increase in abundance\n  during this time period while the  three unprotected areas show slower increases.",
+       linetype = "Site Status") +
+  scale_color_discrete(name = "Survey Site", 
+                     labels = c("Arroyo Quemado", 
+                                "Carpinteria", 
+                                "Isla Vista", 
+                                "Mohawk", 
+                                "Naples")) +
+  theme(panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"),
+        plot.title = element_text(hjust = .5),
+        plot.caption = element_text(hjust = .5),
+        legend.key = element_blank())
+
+        
+  
+
+```
+
+Graph 1 explination put here. 
+
+
+
+
+
+```{r}
+
+lobster_size <- lobster_abundance %>% 
+  select(year, site, size_mm) %>% 
+  filter(year %in% c(2012, 2018)) %>% 
+  mutate(year = as.character(year))
+
+lobster_size$site[lobster_size$site == "AQUE"] <- "Arroyo Quemado"
+
+lobster_size$site[lobster_size$site == "IVEE"] <-  "Isla Vista"
+
+lobster_size$site[lobster_size$site == "NAPL"] <- "Naples"
+
+lobster_size$site[lobster_size$site == "CARP"] <- "Carpenteria"
+
+lobster_size$site[lobster_size$site == "MOHK"] <- "Mohawk"
+
+ggplot(lobster_size) + 
+  geom_density(aes(fill = year, x = size_mm, color = year),
+               alpha = .5) +
+  facet_wrap(~site, scales='free') +
+  scale_x_continuous(limits=c(20,150)) +
+  scale_fill_manual(values = c("#B2182B", "#2166AC")) +
+  scale_color_manual(values = c("#B2182B", "#2166AC")) +
+  labs(title = "Distribution of Lobster Size in Santa Barbara, 2012, 2018",
+       x = "Lobserter Size (mm)",
+       y = "Density") +
+  theme(panel.margin = unit(2, "lines"),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(colour = "grey"),
+        legend.position = "top",
+        legend.title = element_blank())
+
+    
+```
+
+Graph 2 explination put here
+
+
+
+### Summary
