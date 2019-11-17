@@ -27,6 +27,8 @@ library(tidyverse)
 library(dplyr)
 library(janitor)
 library("RColorBrewer")
+library(effsize)
+library(kableExtra)
 
 #read in data, clean names to lowercase snakecase, and uncount the count column
 
@@ -61,7 +63,6 @@ ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
   labs(title = "Santa Barbara Lobster Abundance from 2012 - 2018",
        x = "Year",
        y = "Lobster Abundance (individuals)",
-       caption = "Fig. 1 - Lobster populations at five reef site along the Santa Barbara coast between 2012 and 2018.\n  The two study reefs with marine protection stutus show the  largest increase in abundance\n  during this time period while the  three unprotected areas show slower increases.",
        linetype = "Site Status") +
   scale_color_discrete(name = "Survey Site", 
                      labels = c("Arroyo Quemado", 
@@ -76,6 +77,7 @@ ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
         plot.caption = element_text(hjust = .5),
         legend.key = element_blank())
 ```
+**Fig. 1 - Lobster population counts at five sampling sites along the Santa Barbara coast (2012 - 2018).**  Lines indicate lobster abundance (count of individuals) at Arroyo Quemado (orange), Carpentaria (yellow), Isla Vista (green), Mohawk (blue), and Naples (purple). Solid lines indicate that survy site is a marine protected area; dashed lines are unprotected sites.
 
 Graph 1 explination put here. 
 
@@ -92,7 +94,7 @@ Graph 1 explination put here.
 lobster_size <- lobster_abundance %>% 
   select(year, site, size_mm) %>% 
   filter(year %in% c(2012, 2018)) %>% 
-  mutate(year = as.character(year))
+  mutate(year = as.character(year)) 
 
 lobster_size$site[lobster_size$site == "AQUE"] <- "Arroyo Quemado"
 
@@ -126,6 +128,7 @@ ggplot(lobster_size) +
 
     
 ```
+**Fig. 2 - Lobster size distributions for five reef sites in Santa Barbara county in 2012 and 2018.**
 
 Graph 2 explination put here
 
@@ -141,15 +144,15 @@ mpa_lobster_size <- lobster_size %>%
     site %in% c("Naples", "Isla Vista") ~ "MPA",
     site %in% c("Arroyo Quemado", "Carpenteria", "Mohawk") ~ "Non MPA"))
 
-# Create summary table of mean lobster size, sd and sample size for MPA and Non MPA sites for 2012 and 2018 
+# Create summary df of mean lobster size, sd and sample size for MPA and Non MPA sites for 2012 and 2018 
 
 mpa_mean_size <- mpa_lobster_size %>% 
-  group_by(mpa_status, year) %>% 
+  group_by(year, mpa_status,) %>% 
   summarize( mean = mean(size_mm, na.rm = TRUE,) %>% round(2),
              sd = sd(size_mm, na.rm = TRUE) %>% round(2),
              sample = n())
 
-# Determine if there is a significant difference in lobster size between MPA and non-MPA sites in 2012. 
+# 1. Determine if there is a significant difference in lobster size between MPA and non-MPA sites in 2012. 
 
 lobster_2012_mpa <- mpa_lobster_size %>% 
   filter(year == 2012, mpa_status == "MPA") %>% 
@@ -159,11 +162,17 @@ lobster_2012_nonmpa <- mpa_lobster_size %>%
   filter(year == 2012, mpa_status == "Non MPA") %>% 
   pull(size_mm)
 
-`2012_ttest` <- t.test(lobster_2012_mpa, lobster_2012_nonmpa)
+# Run 2 sided T Test
 
-`2012_ttest`
+ttest_2012 <- t.test(lobster_2012_mpa, lobster_2012_nonmpa)
 
-# Determine if there is a significant difference in lobster size between MPA and non-MPA sites in 2018.
+ttest_2012
+
+# Calculate Cohen d to determine effect size
+
+d_2012  <- cohen.d(lobster_2012_mpa, lobster_2012_nonmpa)
+
+# 2. Determine if there is a significant difference in lobster size between MPA and non-MPA sites in 2018.
 
 lobster_2018_mpa <- mpa_lobster_size %>% 
   filter(year == 2018, mpa_status == "MPA") %>% 
@@ -173,23 +182,60 @@ lobster_2018_nonmpa <- mpa_lobster_size %>%
   filter(year == 2018, mpa_status == "Non MPA") %>% 
   pull(size_mm)
 
-`2018_ttest` <- t.test(lobster_2018_mpa, lobster_2018_nonmpa)
+# Run 2 sides T Test
 
-`2018_ttest`
+ttest_2018 <- t.test(lobster_2018_mpa, lobster_2018_nonmpa)
 
-# Determine if there a significant difference in lobsters observed in 2012 vs. 2018 for MPA sites only.
+ttest_2018
 
-mpa_ttest <- t.test(lobster_2012_mpa, lobster_2018_mpa)
+# Calculate Cohen d to determine effect size
 
-mpa_ttest
+d_2018  <- cohen.d(lobster_2018_mpa, lobster_2018_nonmpa)
+
+# 3. Determine if there a significant difference in lobsters observed in 2012 vs. 2018 for MPA sites only.
+
+# Run 2 sides T Test using pulled values for 2012 mpa sites and 2018 mpa sites
+
+ttest_mpa <- t.test(lobster_2012_mpa, lobster_2018_mpa)
+
+ttest_mpa
+
+# Calculate Cohen d to determine effect size
+
+d_mpa  <- cohen.d(lobster_2012_mpa, lobster_2018_mpa)
 
 
 # Determine if there is a significant difference in lobsters observed in 2012 vs. 2018 for non-MPA sites.
 
-nonmpa_ttest <- t.test(lobster_2012_nonmpa, lobster_2018_nonmpa)
+# Run 2 sides T Test using pulled values for 2012 non mpa sites and 2018 non mpa sites
 
-nonmpa_ttest
+ttest_nonmpa <- t.test(lobster_2012_nonmpa, lobster_2018_nonmpa)
 
+ttest_nonmpa
+
+# Calculate Cohen d to determine effect size
+
+d_nonmpa  <- cohen.d(lobster_2012_nonmpa, lobster_2018_nonmpa)
+
+
+
+```
+
+**Table 1. Lobster size sample statistics for MPA and Non MPA site in 2012 and 2018.**
+```{r}
+
+mpa_mean_size %>% 
+  kable(col.names = c("Year", 
+                      "MPA Status",
+                     "Mean (mm)",
+                     "Standard Deviations (mm)",
+                     "Sample Size (# of lobsters"),
+        caption = 
+        ) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = F,
+                position = "center"
+                ) 
 ```
 
 
