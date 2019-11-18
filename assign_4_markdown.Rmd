@@ -79,7 +79,7 @@ ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
 ```
 **Fig. 1 - Lobster population counts at five sampling sites along the Santa Barbara coast (2012 - 2018).**  Lines indicate lobster abundance (count of individuals) at Arroyo Quemado (orange), Carpentaria (yellow), Isla Vista (green), Mohawk (blue), and Naples (purple). Solid lines indicate that survy site is a marine protected area; dashed lines are unprotected sites.
 
-Graph 1 explination put here. 
+Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is realitivly stable from 2012 to 2018. There is a sharp increase in abundance begining in 2016 at Carpentaria and Isla Vista, however in 2017 Carpentaria experienced a signifigant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all expierenced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectivly. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018. 
 
 
 
