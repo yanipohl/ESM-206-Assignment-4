@@ -21,16 +21,24 @@ library(here)
 
 ```
 
-### Introduction
 <center>
 ![California Spiny Lobster *(Panulirus interruptus)*](spiny_lobster.jpeg)
 <br>
 California Spiny Lobster *(Panulirus interruptus)* [*(Credit: Catalina Island Marine Institute)*](https://cimioutdoored.org/ca-spiny-lobster/)
 </center>
+
+### Introduction
+
+California’s Marine Protected Area (MPA) Management Program aims to protect the integrity of the state’s marine ecosystems through the establishment of a network of protected areas along the California coast. (California Department of Fish and Wildlife) In order to ensure that MPA’s meet program goals, and to facilitate effective adaptive management, selected sites have ongoing monitoring, research, and evaluation projects. The Santa Barbara Coastal Long-term ecological research team (SBC LTER) is part of NSF’s Long Term Ecological Research Network and studies the giant kelp forests off the coast of southern California. (Reed D.2019.) SBC LTER studies five reef locations in Santa Barbara County. Two of these reefs, Naples and Isla Vista, are part of the California MPA network and were established as MPA sites on January 1st, 2012. The other three reefs, Arroyo Quemado, Mohawk and Carpinteria, are outside MPAs. The California spiny lobster (Panulirus interruptus) is an important predator for kelp forest ecosystems so understanding how fishing impacts their populations is critical for managing California’s coastal kelp forest community dynamics. Abundance and size data on these lobsters in these five reefs provides a comparison for how lobster population health has changed in in MPA and non-MPA reefs in the six years since the MPAs were established.
+
+<center>![SBC LTER Sampling Locations](site_locations.png)
+<br>
+Location of SBC LTER sampling sites (2012-2018) [*(Credit: Santa Barbara Coastal Term Ecological Research program)*](https://sbclter.msi.ucsb.edu/)
+</center>
  
 ### Data and Methods
 
-Data for Spiny Lobster abundance and sizes was collected and provided by The Santa Barbara Coastal Term Ecological Research (SBC LTER) program. Divers measured abundance and size (mm) in summer before the start of fishing season at five sites along the coast of Santa Barbara. The number and size of spiny lobsters at each site were recorded by in four 300m^2 transects (60 x 5 m) at each site. Data collection begin in the summer of 2012 and was collected annually through 2018. 
+Data for Spiny Lobster abundance and sizes was collected and provided by the SBC LTER program. Divers measured abundance and size (mm) in summer before the start of fishing season at five sites along the coast of Santa Barbara. The number and size of spiny lobsters at each site were recorded by in four 300m^2 transects (60 x 5 m) at each site. Data collection begin in the summer of 2012 and was collected annually through 2018. 
 
 ### Results
 
@@ -305,5 +313,7 @@ mpa_mean_size %>%
 *
 
 ### Reference
+
+California Department of Fish and Wildlife. (2019). California Marine Protected Areas (MPAs). Retrieved from: https://www.wildlife.ca.gov/Conservation/Marine/MPAs
 
 Reed D. 2019. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012. Environmental Data Initiative. https://doi.org/10.6073/pasta/a593a675d644fdefb736750b291579a0. Dataset accessed 11/17/2019.
