@@ -1,5 +1,5 @@
 ---
-title: "Assignmnet 4"
+title: "Assignment 4"
 author: "Yani Pohl and Marie Bouffard"
 date: "11/15/2019"
 output: html_document
@@ -13,9 +13,10 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ### Introduction
 
-DO
 
 ### Data and Methods
+
+Data for Spiny Lobster abundance and sizes was collected and provided by The Santa Barbara Coastal Term Ecological Research (SBC LTER) program. Divers measured abundance and size (mm) in summer before the start of fishing season at five sites along the coast of Santa Barbara. The number and size of spiny lobsters at each site were recorded by in four 300m^2 transects (60 x 5 m) at each site. Data collection begin in the summer of 2012 and was collected annually through 2018. 
 
 ### Results
 
@@ -25,10 +26,12 @@ DO
 
 library(tidyverse)
 library(dplyr)
+library(here)
 library(janitor)
 library("RColorBrewer")
 library(effsize)
 library(kableExtra)
+
 
 #read in data, clean names to lowercase snakecase, and uncount the count column
 
@@ -39,6 +42,9 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv", na = "-99999") %
       
 ```
 
+#### 1. Changes in Lobster Abundance by Site
+
+Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is relatively stable from 2012 to 2018. There is a sharp increase in abundance beginning in 2016 at Carpenteria and Isla Vista, however in 2017 Carpenteria experienced a significant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all experienced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectively. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018. 
 ```{r}
 
 # Results A
@@ -77,13 +83,12 @@ ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
         plot.caption = element_text(hjust = .5),
         legend.key = element_blank())
 ```
-**Fig. 1 - Lobster population counts at five sampling sites along the Santa Barbara coast (2012 - 2018).**  Lines indicate lobster abundance (count of individuals) at Arroyo Quemado (orange), Carpentaria (yellow), Isla Vista (green), Mohawk (blue), and Naples (purple). Solid lines indicate that survy site is a marine protected area; dashed lines are unprotected sites.
-
-Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is realitivly stable from 2012 to 2018. There is a sharp increase in abundance begining in 2016 at Carpentaria and Isla Vista, however in 2017 Carpentaria experienced a signifigant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all expierenced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectivly. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018. 
+**Fig. 1** - *Lobster population counts at five sampling sites along the Santa Barbara coast (2012 - 2018).  Lines indicate lobster abundance (count of individuals) at Arroyo Quemado (orange), Carpenteria (yellow), Isla Vista (green), Mohawk (blue), and Naples (purple). Solid lines indicate that survey site is a marine protected area; dashed lines are unprotected sites.*
 
 
+#### 2. Lobster Size Distribution in 2012 and 2018
 
-
+Isla Vista and Naples, the reef sites within Marine Protected Areas, saw an overall increase in lobster size for the entire population from 2012 to 2018. The number of lobsters above 80 mm (approximate minimum catch size) increased significantly at Isla Vista between 2012 and 2018. At unprotected reef sites the distribution of size in the lobster populations is relatively unchanged in the same time period and the majority of lobsters in these population are smaller than the minimum catch size. 
 
 ```{r}
 
@@ -94,7 +99,7 @@ Spiny lobster abundance shows an overall increase at all sites except Arroyo Que
 lobster_size <- lobster_abundance %>% 
   select(year, site, size_mm) %>% 
   filter(year %in% c(2012, 2018)) %>% 
-  mutate(year = as.character(year)) 
+  mutate(year = as.character(year))
 
 lobster_size$site[lobster_size$site == "AQUE"] <- "Arroyo Quemado"
 
@@ -111,12 +116,12 @@ lobster_size$site[lobster_size$site == "MOHK"] <- "Mohawk"
 ggplot(lobster_size) + 
   geom_density(aes(fill = year, x = size_mm, color = year),
                alpha = .5) +
-  facet_wrap(~site, scales='free') +
+  facet_wrap(~site, scales = "free_x") +
   scale_x_continuous(limits=c(20,150)) +
   scale_fill_manual(values = c("#B2182B", "#2166AC")) +
   scale_color_manual(values = c("#B2182B", "#2166AC")) +
   labs(title = "Distribution of Lobster Size in Santa Barbara, 2012, 2018",
-       x = "Lobserter Size (mm)",
+       x = "Lobster Size (mm)",
        y = "Density") +
   theme(panel.margin = unit(2, "lines"),
         panel.grid.minor = element_blank(),
@@ -128,11 +133,9 @@ ggplot(lobster_size) +
 
     
 ```
-**Fig. 2 - Lobster size distributions for five reef sites in Santa Barbara county in 2012 and 2018.**
+**Fig. 2** - *Lobster size distributions for five reef sites in Santa Barbara county in 2012 and 2018.*
 
-Graph 2 explination put here
-
-
+#### 3. Comparing mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018
 ```{r}
 
 # Results C
@@ -144,6 +147,9 @@ mpa_lobster_size <- lobster_size %>%
     site %in% c("Naples", "Isla Vista") ~ "MPA",
     site %in% c("Arroyo Quemado", "Carpenteria", "Mohawk") ~ "Non MPA"))
 
+```
+
+```{r}
 # Create summary df of mean lobster size, sd and sample size for MPA and Non MPA sites for 2012 and 2018 
 
 mpa_mean_size <- mpa_lobster_size %>% 
@@ -152,6 +158,9 @@ mpa_mean_size <- mpa_lobster_size %>%
              sd = sd(size_mm, na.rm = TRUE) %>% round(2),
              sample = n())
 
+```
+
+```{r}
 # 1. Determine if there is a significant difference in lobster size between MPA and non-MPA sites in 2012. 
 
 lobster_2012_mpa <- mpa_lobster_size %>% 
@@ -166,12 +175,12 @@ lobster_2012_nonmpa <- mpa_lobster_size %>%
 
 ttest_2012 <- t.test(lobster_2012_mpa, lobster_2012_nonmpa)
 
-ttest_2012
-
 # Calculate Cohen d to determine effect size
 
 d_2012  <- cohen.d(lobster_2012_mpa, lobster_2012_nonmpa)
-
+```
+In 2012 lobsters at MPA sites had a mean size of 
+```{r}
 # 2. Determine if there is a significant difference in lobster size between MPA and non-MPA sites in 2018.
 
 lobster_2018_mpa <- mpa_lobster_size %>% 
@@ -186,39 +195,33 @@ lobster_2018_nonmpa <- mpa_lobster_size %>%
 
 ttest_2018 <- t.test(lobster_2018_mpa, lobster_2018_nonmpa)
 
-ttest_2018
-
 # Calculate Cohen d to determine effect size
 
 d_2018  <- cohen.d(lobster_2018_mpa, lobster_2018_nonmpa)
+```
 
+```{r}
 # 3. Determine if there a significant difference in lobsters observed in 2012 vs. 2018 for MPA sites only.
 
 # Run 2 sides T Test using pulled values for 2012 mpa sites and 2018 mpa sites
 
 ttest_mpa <- t.test(lobster_2012_mpa, lobster_2018_mpa)
 
-ttest_mpa
-
 # Calculate Cohen d to determine effect size
 
 d_mpa  <- cohen.d(lobster_2012_mpa, lobster_2018_mpa)
+```
 
-
-# Determine if there is a significant difference in lobsters observed in 2012 vs. 2018 for non-MPA sites.
+```{r}
+# 4. Determine if there is a significant difference in lobsters observed in 2012 vs. 2018 for non-MPA sites.
 
 # Run 2 sides T Test using pulled values for 2012 non mpa sites and 2018 non mpa sites
 
 ttest_nonmpa <- t.test(lobster_2012_nonmpa, lobster_2018_nonmpa)
 
-ttest_nonmpa
-
 # Calculate Cohen d to determine effect size
 
 d_nonmpa  <- cohen.d(lobster_2012_nonmpa, lobster_2018_nonmpa)
-
-
-
 ```
 
 **Table 1. Lobster size sample statistics for MPA and Non MPA site in 2012 and 2018.**
@@ -241,3 +244,8 @@ mpa_mean_size %>%
 
 
 ### Summary
+
+
+### Reference
+
+Reed D. 2019. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012. Environmental Data Initiative. https://doi.org/10.6073/pasta/a593a675d644fdefb736750b291579a0. Dataset accessed 11/17/2019.
