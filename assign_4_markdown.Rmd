@@ -9,11 +9,25 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE)
+# Attach packages 
+
+library(tidyverse)
+library(dplyr)
+library(janitor)
+library("RColorBrewer")
+library(effsize)
+library(kableExtra)
+library(here)
+
 ```
 
 ### Introduction
-
-
+<center>
+![California Spiny Lobster *(Panulirus interruptus)*](spiny_lobster.jpeg)
+<br>
+California Spiny Lobster *(Panulirus interruptus)* [*(Credit: Catalina Island Marine Institute)*](https://cimioutdoored.org/ca-spiny-lobster/)
+</center>
+ 
 ### Data and Methods
 
 Data for Spiny Lobster abundance and sizes was collected and provided by The Santa Barbara Coastal Term Ecological Research (SBC LTER) program. Divers measured abundance and size (mm) in summer before the start of fishing season at five sites along the coast of Santa Barbara. The number and size of spiny lobsters at each site were recorded by in four 300m^2 transects (60 x 5 m) at each site. Data collection begin in the summer of 2012 and was collected annually through 2018. 
@@ -21,17 +35,6 @@ Data for Spiny Lobster abundance and sizes was collected and provided by The San
 ### Results
 
 ```{r, echo=FALSE}
-
-# Attach packages 
-
-library(tidyverse)
-library(dplyr)
-library(here)
-library(janitor)
-library("RColorBrewer")
-library(effsize)
-library(kableExtra)
-
 
 #read in data, clean names to lowercase snakecase, and uncount the count column
 
@@ -44,7 +47,8 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv", na = "-99999") %
 
 #### 1. Changes in Lobster Abundance by Site
 
-Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is relatively stable from 2012 to 2018. There is a sharp increase in abundance beginning in 2016 at Carpenteria and Isla Vista, however in 2017 Carpenteria experienced a significant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all experienced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectively. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018. ->
+Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is relatively stable from 2012 to 2018. There is a sharp increase in abundance beginning in 2016 at Carpenteria and Isla Vista, however in 2017 Carpenteria experienced a significant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all experienced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectively. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018.
+<br>
 ```{r}
 
 # Results A
@@ -90,7 +94,7 @@ ggplot(data = lobster_yr,
           plot.caption = element_text(hjust = .5))
 
 ```
-<-
+<br>
 
 **Fig. 1** - *Lobster population counts at five sampling sites along the Santa Barbara coast (2012 - 2018).  Lines indicate lobster abundance (count of individuals) at Arroyo Quemado (orange), Carpenteria (yellow), Isla Vista (green), Mohawk (blue), and Naples (purple). Solid lines indicate that survey site is a marine protected area; dashed lines are unprotected sites.*
 
@@ -98,7 +102,7 @@ ggplot(data = lobster_yr,
 #### 2. Lobster Size Distribution in 2012 and 2018
 
 Isla Vista and Naples, the reef sites within Marine Protected Areas, saw an overall increase in lobster size for the entire population from 2012 to 2018. The number of lobsters above 80 mm (approximate minimum catch size) increased significantly at Isla Vista between 2012 and 2018. At unprotected reef sites the distribution of size in the lobster populations is relatively unchanged in the same time period and the majority of lobsters in these population are smaller than the minimum catch size. 
-
+<br>
 ```{r}
 
 # Results B
@@ -142,6 +146,7 @@ ggplot(lobster_size) +
 
     
 ```
+<br>
 **Fig. 2** - *Lobster size distributions for five reef sites in Santa Barbara county in 2012 and 2018.*
 
 #### 3. Comparing mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018
