@@ -44,7 +44,7 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv", na = "-99999") %
 
 #### 1. Changes in Lobster Abundance by Site
 
-Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is relatively stable from 2012 to 2018. There is a sharp increase in abundance beginning in 2016 at Carpenteria and Isla Vista, however in 2017 Carpenteria experienced a significant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all experienced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectively. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018. 
+Spiny lobster abundance shows an overall increase at all sites except Arroyo Quemado during the 2012 to 2018 time period. At the Arroyo Quemado reef site there are minor yearly changes in lobster abundance but the population is relatively stable from 2012 to 2018. There is a sharp increase in abundance beginning in 2016 at Carpenteria and Isla Vista, however in 2017 Carpenteria experienced a significant decline in lobster abundance while Isla Vista lobster abundance continued to increase through 2018.  Isla Vista, Naples, and Mohawk reefs all experienced declines in abundance between 2015 and 2016. At Mohawk reef this decline continued until 2018 while lobster abundance at Isla Vista and Naples reef had recovered by 2017 and 2018, respectively. As for 2017 the only two reef sites where lobster abundance was increasing were Isla Vista and Naples, which are both marine protected areas. All three unprotected reef sites show stable or declining lobster abundance in 2018. ->
 ```{r}
 
 # Results A
@@ -63,26 +63,35 @@ lobster_yr <- lobster_abundance %>%
 
 # Create line graph to visulize changes in lobster abundance by site from 2012 - 2018
 
-ggplot(lobster_yr, aes(x = year, y = count, color = site)) +
-  geom_line(aes(linetype = mpa_status, 
-                color = site)) +
-  labs(title = "Santa Barbara Lobster Abundance from 2012 - 2018",
-       x = "Year",
+lobster_palette <- c("#354373", "#F2955E", "#038C8C", "#F27457", "#03658C")
+
+ggplot(data = lobster_yr,
+       aes(x = year, y = count)) +
+  geom_line(aes(color = site,
+                linetype = mpa_status)) +
+  guides(color = FALSE) +
+  labs(x = "Year",
        y = "Lobster Abundance (individuals)",
-       linetype = "Site Status") +
-  scale_color_discrete(name = "Survey Site", 
-                     labels = c("Arroyo Quemado", 
-                                "Carpinteria", 
-                                "Isla Vista", 
-                                "Mohawk", 
-                                "Naples")) +
-  theme(panel.grid.minor = element_blank(),
-        panel.background = element_blank(), 
-        axis.line = element_line(colour = "black"),
-        plot.title = element_text(hjust = .5),
-        plot.caption = element_text(hjust = .5),
-        legend.key = element_blank())
+       title = "Santa Barbara Lobster Abundance (2012 - 2018)") +
+  annotate("text", x = 2018.3, y = 875, label = "Isla Vista", color = "#038C8C") +
+  annotate("text", x = 2018.2, y = 500, label = "Carpinteria", color = "#F2955E") +
+  annotate("text", x = 2018.3, y = 275, label = "Naples", color = "#03658C") +
+  annotate("text", x = 2018.3, y = 135, label = "Mohawk", color = "#F27457") +
+  annotate("text", x = 2018, y = 35, label = "Arroyo Quemado", color = "#354373") +
+  scale_colour_manual(values = lobster_palette) +
+    theme(panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(color = "black"),
+          legend.position = c(0.3, 0.7), 
+          legend.text = element_text(size = 16),
+          legend.key = element_blank(),
+          legend.title = element_blank(),
+          plot.title = element_text(hjust = .5),
+          plot.caption = element_text(hjust = .5))
+
 ```
+<-
+
 **Fig. 1** - *Lobster population counts at five sampling sites along the Santa Barbara coast (2012 - 2018).  Lines indicate lobster abundance (count of individuals) at Arroyo Quemado (orange), Carpenteria (yellow), Isla Vista (green), Mohawk (blue), and Naples (purple). Solid lines indicate that survey site is a marine protected area; dashed lines are unprotected sites.*
 
 
